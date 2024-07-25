@@ -141,7 +141,11 @@
 			<Textfield bind:value={data.name} label="Table" />
 			<span class="mt-2">File type</span>
 			<SegmentedButton segments={Object.entries(fileTypes)} let:segment>
-				<Segment {segment} on:click$preventDefault={() => updateFileType(segment[0])}>
+				<Segment
+					{segment}
+					selected={segment[0] == data.file_type}
+					on:click$preventDefault={() => updateFileType(segment[0])}
+				>
 					<Icon icon={segment[1]} width="24" height="24" />
 					<Label class="ml-2">{segment[0]}</Label>
 				</Segment>
@@ -157,7 +161,11 @@
 			{/if}
 			<span class="mt-2">Location</span>
 			<SegmentedButton segments={Object.entries(locationTypes)} let:segment>
-				<Segment {segment} on:click$preventDefault={() => updateLocationType(segment[0])}>
+				<Segment
+					{segment}
+					selected={segment[0] == locationType}
+					on:click$preventDefault={() => updateLocationType(segment[0])}
+				>
 					<Icon icon={segment[1]} width="24" height="24" />
 					<Label class="ml-2">{segment[0]}</Label>
 				</Segment>

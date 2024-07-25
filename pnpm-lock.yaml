@@ -33,6 +33,9 @@ importers:
       '@smui/checkbox':
         specifier: ^7.0.0
         version: 7.0.0(svelte@4.2.18)(typescript@5.5.3)
+      '@smui/data-table':
+        specifier: ^7.0.0
+        version: 7.0.0(svelte@4.2.18)(typescript@5.5.3)
       '@smui/dialog':
         specifier: ^7.0.0
         version: 7.0.0(svelte@4.2.18)(typescript@5.5.3)
@@ -46,6 +49,9 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@4.2.18)(typescript@5.5.3)
       '@smui/icon-button':
+        specifier: ^7.0.0
+        version: 7.0.0(svelte@4.2.18)(typescript@5.5.3)
+      '@smui/linear-progress':
         specifier: ^7.0.0
         version: 7.0.0(svelte@4.2.18)(typescript@5.5.3)
       '@smui/list':
@@ -64,6 +70,12 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@4.2.18)(typescript@5.5.3)
       '@smui/switch':
+        specifier: ^7.0.0
+        version: 7.0.0(svelte@4.2.18)(typescript@5.5.3)
+      '@smui/tab':
+        specifier: ^7.0.0
+        version: 7.0.0(svelte@4.2.18)(typescript@5.5.3)
+      '@smui/tab-bar':
         specifier: ^7.0.0
         version: 7.0.0(svelte@4.2.18)(typescript@5.5.3)
       '@smui/textfield':
@@ -360,6 +372,9 @@ packages:
   '@material/checkbox@14.0.0':
     resolution: {integrity: sha512-OoqwysCqvj1d0cRmEwVWPvg5OqYAiCFpE6Wng6me/Cahfe4xgRxSPa37WWqsClw20W7PG/5RrYRCBtc6bUUUZA==}
 
+  '@material/data-table@14.0.0':
+    resolution: {integrity: sha512-tnmLawGaMtnp29KH8pX99bqeKmFODE+MtRUTt6TauupkEfQE/wd0Um4JQDFiI0kCch7uF3r/NmQKyKuan10hXw==}
+
   '@material/density@14.0.0':
     resolution: {integrity: sha512-NlxXBV5XjNsKd8UXF4K/+fOXLxoFNecKbsaQO6O2u+iG8QBfFreKRmkhEBb2hPPwC3w8nrODwXX0lHV+toICQw==}
 
@@ -396,6 +411,9 @@ packages:
   '@material/line-ripple@14.0.0':
     resolution: {integrity: sha512-Rx9eSnfp3FcsNz4O+fobNNq2PSm5tYHC3hRpY2ZK3ghTvgp3Y40/soaGEi/Vdg0F7jJXRaBSNOe6p5t9CVfy8Q==}
 
+  '@material/linear-progress@14.0.0':
+    resolution: {integrity: sha512-MGIAWMHMW6TSV/TNWyl5N/escpDHk3Rq6hultFif+D9adqbOXrtfZZIFPLj1FpMm1Ucnj6zgOmJHgCDsxRVNIA==}
+
   '@material/list@14.0.0':
     resolution: {integrity: sha512-AFaBGV9vQyfnG8BT2R3UGVdF5w2SigQqBH+qbOSxQhk4BgVvhDfJUIKT415poLNMdnaDtcuYz+ZWvVNoRDaL7w==}
 
@@ -407,6 +425,9 @@ packages:
 
   '@material/notched-outline@14.0.0':
     resolution: {integrity: sha512-6S58DlWmhCDr4RQF2RuwqANxlmLdHtWy2mF4JQLD9WOiCg4qY9eCQnMXu3Tbhr7f/nOZ0vzc7AtA3vfJoZmCSw==}
+
+  '@material/progress-indicator@14.0.0':
+    resolution: {integrity: sha512-09JRTuIySxs670Tcy4jVlqCUbyrO+Ad6z3nHnAi8pYl74duco4n/9jTROV0mlFdr9NIFifnd08lKbiFLDmfJGQ==}
 
   '@material/radio@14.0.0':
     resolution: {integrity: sha512-VwPOi5fAoZXL3RhQJ6iDWTR34L6JXlwd5VXli8ZhzNHnUzcmpMODrRhGVew4Z5uuNj6/n2Jbn1zcS9XmmqjssA==}
@@ -431,6 +452,18 @@ packages:
 
   '@material/switch@14.0.0':
     resolution: {integrity: sha512-vHVKzbvHVKGSrkMB1lZAl8z3eJ8sPRnSR+DWn+IhqHcTsDdDyly2NNj4i2vTSrEA39CztGqkx0OnKM4vkpiZHw==}
+
+  '@material/tab-bar@14.0.0':
+    resolution: {integrity: sha512-G/UYEOIcljCHlkj3iCRGIz4zE9RVcsdC9wuOR6LE2rla6EGyT0x2psNlL0pIMROjXoB0HGda/gB90ovzKcbURA==}
+
+  '@material/tab-indicator@14.0.0':
+    resolution: {integrity: sha512-wfq136fsJGqtCIW8x1wFQHgRr7dIQ9SWqp6WG4FQGHpSzliNDA23/bdBUjh3lX2U+mfbdsFmZWEPy06jg2uc5g==}
+
+  '@material/tab-scroller@14.0.0':
+    resolution: {integrity: sha512-wadETsRM7vT4mRjXedaPXxI/WFSSgqHRNI//dORJ6627hoiJfLb5ixwUKTYk9zTz6gNwAlRTrKh98Dr9T7n7Kw==}
+
+  '@material/tab@14.0.0':
+    resolution: {integrity: sha512-jGSQdp6BvZOVnvGbv0DvNDJL2lHYVFtKGehV0gSZ7FrjHK6gZnKZjWOVwt1NPu9ig9zy85vPRFpvFTeje1KZpg==}
 
   '@material/textfield@14.0.0':
     resolution: {integrity: sha512-HGbtAlvlIB2vWBq85yw5wQeeP3Kndl6Z0TJzQ6piVtcfdl2mPyWhuuVHQRRAOis3rCIaAAaxCQYYTJh8wIi0XQ==}
@@ -564,6 +597,9 @@ packages:
   '@smui/common@7.0.0':
     resolution: {integrity: sha512-/JUf25KMIDLFNfiuMSMs2g7dEZZFUnDJDxpbT3FlGEY/HKoEf0W9GnbmIOzPje1wxW9ajKHN2SIYDPx9so1vnw==}
 
+  '@smui/data-table@7.0.0':
+    resolution: {integrity: sha512-ZpAdnovoi5g0ya6oitMfPWttsiF9u2N9WyZtY5BYfxNU3famCmM8Wbtno8pF0sZ5tNueEw1Xn8A1BI+KNKBPyA==}
+
   '@smui/dialog@7.0.0':
     resolution: {integrity: sha512-F6lxwiGoc9ga0btsnpMWIYXPUXAKS0Ewa3CQH9HUPumqCzImTIlsGWL8fiAP3feVjRK+InRSaryZz0eJFZLo/A==}
 
@@ -584,6 +620,9 @@ packages:
 
   '@smui/line-ripple@7.0.0':
     resolution: {integrity: sha512-Mm5B8xci4SglMehp404veVu3zGlZVHViiYsNPpypaG+4aOrK0dVgBrd1YgqyXHKFSHOama/Olwe2E2YbkQvxlw==}
+
+  '@smui/linear-progress@7.0.0':
+    resolution: {integrity: sha512-G5CsHAKqancHpw4X075qA8fOdS94Mu8Pbi74kEWQHcsJrT+6ef4uBt+eFOK0BZ61znxbcS8v+Hp9Zztn+wS5DA==}
 
   '@smui/list@7.0.0':
     resolution: {integrity: sha512-kZnpfbkFtIs9vZCr2xxDTO5Dcdj6WAtGa+82sN5zGg6hC5q8KMGKOxNIFdTz2hw5a6Bg//Zg2mK5AB4tVM4LBw==}
@@ -617,6 +656,18 @@ packages:
 
   '@smui/switch@7.0.0':
     resolution: {integrity: sha512-LeY1aIMvbJOOmex5o/M7jOX0y6K/1Xa2u6myju30mOy595ibxMGRfuNSdePHBBrR79QbsEow/otltSA1vspw2Q==}
+
+  '@smui/tab-bar@7.0.0':
+    resolution: {integrity: sha512-ycAuoGAS2YaV541vDib69CAswNQ+yMRFnloagRcUhyJ4t1eypLDXnba29r1oiEkhwdunDMcH7UCbeyrZUIBJFg==}
+
+  '@smui/tab-indicator@7.0.0':
+    resolution: {integrity: sha512-wyLpiljJwF1X9ZvCsVFIzqVkbxFF1wyxvAnBem74y6gKlyKa1F5oUm+bwNI/zB7lyWkTjsvWKlWsrzqDdOuFPg==}
+
+  '@smui/tab-scroller@7.0.0':
+    resolution: {integrity: sha512-4smThaPvy3sVj4/Ezgo8er7BqWmnnemmpuWPcNpmt3+hckUhKwVoqtoa9HUdRZClDbyegABvhwbTjIkR39IM+Q==}
+
+  '@smui/tab@7.0.0':
+    resolution: {integrity: sha512-FlOwRO4vBlAH5wm4EFrOPiKtsGkoMbyWqtMyGwBLrGQUTPVUUrFFnHD0J2QHztKKiaIJme+GqrD1bQA9whfKkA==}
 
   '@smui/textfield@7.0.0':
     resolution: {integrity: sha512-3p/pipFrj6xuA6YUhIEHf4fxInMENI3EFHVYeF1wU0vERSojtqBw+NnAscgv/PHKv4X6nFY3ZvD/9cVf7S4frA==}
@@ -2029,6 +2080,27 @@ snapshots:
       '@material/touch-target': 14.0.0
       tslib: 2.6.3
 
+  '@material/data-table@14.0.0':
+    dependencies:
+      '@material/animation': 14.0.0
+      '@material/base': 14.0.0
+      '@material/checkbox': 14.0.0
+      '@material/density': 14.0.0
+      '@material/dom': 14.0.0
+      '@material/elevation': 14.0.0
+      '@material/feature-targeting': 14.0.0
+      '@material/icon-button': 14.0.0
+      '@material/linear-progress': 14.0.0
+      '@material/list': 14.0.0
+      '@material/menu': 14.0.0
+      '@material/rtl': 14.0.0
+      '@material/select': 14.0.0
+      '@material/shape': 14.0.0
+      '@material/theme': 14.0.0
+      '@material/touch-target': 14.0.0
+      '@material/typography': 14.0.0
+      tslib: 2.6.3
+
   '@material/density@14.0.0':
     dependencies:
       tslib: 2.6.3
@@ -2149,6 +2221,17 @@ snapshots:
       '@material/theme': 14.0.0
       tslib: 2.6.3
 
+  '@material/linear-progress@14.0.0':
+    dependencies:
+      '@material/animation': 14.0.0
+      '@material/base': 14.0.0
+      '@material/dom': 14.0.0
+      '@material/feature-targeting': 14.0.0
+      '@material/progress-indicator': 14.0.0
+      '@material/rtl': 14.0.0
+      '@material/theme': 14.0.0
+      tslib: 2.6.3
+
   '@material/list@14.0.0':
     dependencies:
       '@material/base': 14.0.0
@@ -2194,6 +2277,10 @@ snapshots:
       '@material/rtl': 14.0.0
       '@material/shape': 14.0.0
       '@material/theme': 14.0.0
+      tslib: 2.6.3
+
+  '@material/progress-indicator@14.0.0':
+    dependencies:
       tslib: 2.6.3
 
   '@material/radio@14.0.0':
@@ -2294,6 +2381,50 @@ snapshots:
       '@material/shape': 14.0.0
       '@material/theme': 14.0.0
       '@material/tokens': 14.0.0
+      tslib: 2.6.3
+
+  '@material/tab-bar@14.0.0':
+    dependencies:
+      '@material/animation': 14.0.0
+      '@material/base': 14.0.0
+      '@material/density': 14.0.0
+      '@material/elevation': 14.0.0
+      '@material/feature-targeting': 14.0.0
+      '@material/tab': 14.0.0
+      '@material/tab-indicator': 14.0.0
+      '@material/tab-scroller': 14.0.0
+      '@material/theme': 14.0.0
+      '@material/typography': 14.0.0
+      tslib: 2.6.3
+
+  '@material/tab-indicator@14.0.0':
+    dependencies:
+      '@material/animation': 14.0.0
+      '@material/base': 14.0.0
+      '@material/feature-targeting': 14.0.0
+      '@material/theme': 14.0.0
+      tslib: 2.6.3
+
+  '@material/tab-scroller@14.0.0':
+    dependencies:
+      '@material/animation': 14.0.0
+      '@material/base': 14.0.0
+      '@material/dom': 14.0.0
+      '@material/feature-targeting': 14.0.0
+      '@material/tab': 14.0.0
+      tslib: 2.6.3
+
+  '@material/tab@14.0.0':
+    dependencies:
+      '@material/base': 14.0.0
+      '@material/elevation': 14.0.0
+      '@material/feature-targeting': 14.0.0
+      '@material/focus-ring': 14.0.0
+      '@material/ripple': 14.0.0
+      '@material/rtl': 14.0.0
+      '@material/tab-indicator': 14.0.0
+      '@material/theme': 14.0.0
+      '@material/typography': 14.0.0
       tslib: 2.6.3
 
   '@material/textfield@14.0.0':
@@ -2464,6 +2595,20 @@ snapshots:
       - svelte
       - typescript
 
+  '@smui/data-table@7.0.0(svelte@4.2.18)(typescript@5.5.3)':
+    dependencies:
+      '@material/data-table': 14.0.0
+      '@material/dom': 14.0.0
+      '@smui/checkbox': 7.0.0(svelte@4.2.18)(typescript@5.5.3)
+      '@smui/common': 7.0.0(svelte@4.2.18)(typescript@5.5.3)
+      '@smui/icon-button': 7.0.0(svelte@4.2.18)(typescript@5.5.3)
+      '@smui/ripple': 7.0.0(svelte@4.2.18)(typescript@5.5.3)
+      '@smui/select': 7.0.0(svelte@4.2.18)(typescript@5.5.3)
+      svelte2tsx: 0.7.13(svelte@4.2.18)(typescript@5.5.3)
+    transitivePeerDependencies:
+      - svelte
+      - typescript
+
   '@smui/dialog@7.0.0(svelte@4.2.18)(typescript@5.5.3)':
     dependencies:
       '@material/button': 14.0.0
@@ -2530,6 +2675,15 @@ snapshots:
   '@smui/line-ripple@7.0.0(svelte@4.2.18)(typescript@5.5.3)':
     dependencies:
       '@material/line-ripple': 14.0.0
+      '@smui/common': 7.0.0(svelte@4.2.18)(typescript@5.5.3)
+      svelte2tsx: 0.7.13(svelte@4.2.18)(typescript@5.5.3)
+    transitivePeerDependencies:
+      - svelte
+      - typescript
+
+  '@smui/linear-progress@7.0.0(svelte@4.2.18)(typescript@5.5.3)':
+    dependencies:
+      '@material/linear-progress': 14.0.0
       '@smui/common': 7.0.0(svelte@4.2.18)(typescript@5.5.3)
       svelte2tsx: 0.7.13(svelte@4.2.18)(typescript@5.5.3)
     transitivePeerDependencies:
@@ -2666,6 +2820,47 @@ snapshots:
       '@material/theme': 14.0.0
       '@smui/common': 7.0.0(svelte@4.2.18)(typescript@5.5.3)
       '@smui/ripple': 7.0.0(svelte@4.2.18)(typescript@5.5.3)
+      svelte2tsx: 0.7.13(svelte@4.2.18)(typescript@5.5.3)
+    transitivePeerDependencies:
+      - svelte
+      - typescript
+
+  '@smui/tab-bar@7.0.0(svelte@4.2.18)(typescript@5.5.3)':
+    dependencies:
+      '@material/tab-bar': 14.0.0
+      '@smui/common': 7.0.0(svelte@4.2.18)(typescript@5.5.3)
+      '@smui/tab': 7.0.0(svelte@4.2.18)(typescript@5.5.3)
+      '@smui/tab-scroller': 7.0.0(svelte@4.2.18)(typescript@5.5.3)
+      svelte2tsx: 0.7.13(svelte@4.2.18)(typescript@5.5.3)
+    transitivePeerDependencies:
+      - svelte
+      - typescript
+
+  '@smui/tab-indicator@7.0.0(svelte@4.2.18)(typescript@5.5.3)':
+    dependencies:
+      '@material/tab-indicator': 14.0.0
+      '@smui/common': 7.0.0(svelte@4.2.18)(typescript@5.5.3)
+      svelte2tsx: 0.7.13(svelte@4.2.18)(typescript@5.5.3)
+    transitivePeerDependencies:
+      - svelte
+      - typescript
+
+  '@smui/tab-scroller@7.0.0(svelte@4.2.18)(typescript@5.5.3)':
+    dependencies:
+      '@material/dom': 14.0.0
+      '@material/tab-scroller': 14.0.0
+      '@smui/common': 7.0.0(svelte@4.2.18)(typescript@5.5.3)
+      svelte2tsx: 0.7.13(svelte@4.2.18)(typescript@5.5.3)
+    transitivePeerDependencies:
+      - svelte
+      - typescript
+
+  '@smui/tab@7.0.0(svelte@4.2.18)(typescript@5.5.3)':
+    dependencies:
+      '@material/tab': 14.0.0
+      '@smui/common': 7.0.0(svelte@4.2.18)(typescript@5.5.3)
+      '@smui/ripple': 7.0.0(svelte@4.2.18)(typescript@5.5.3)
+      '@smui/tab-indicator': 7.0.0(svelte@4.2.18)(typescript@5.5.3)
       svelte2tsx: 0.7.13(svelte@4.2.18)(typescript@5.5.3)
     transitivePeerDependencies:
       - svelte

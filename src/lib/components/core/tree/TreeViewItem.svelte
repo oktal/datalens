@@ -17,7 +17,7 @@
 </script>
 
 <div class="flex flex-col">
-	<div class="flex gap-1 items-center">
+	<div class="flex gap-1 items-center overflow-auto">
 		<IconButton on:click={expand} class="w-8 h-8 p-1">
 			{#if expanded}
 				<Icon icon="carbon:caret-down" />
@@ -32,9 +32,7 @@
 
 	{#if hasChildren}
 		<div class="grid ml-5 transition-all duration-300 ease-in-out {display}">
-			<div class="overflow-hidden">
-				<slot />
-			</div>
+			<slot />
 		</div>
 	{/if}
 </div>

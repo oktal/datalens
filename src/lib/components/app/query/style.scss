@@ -1,0 +1,6 @@
+@use '@material/data-table/mixins' as data-table;
+
+.rows-table {
+  @include data-table.row-height(32px);
+  @include data-table.header-row-height(48px);
+}

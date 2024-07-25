@@ -25,6 +25,13 @@ export type DatabaseModel = {
     }[]
 }
 
+export type StreamId = string;
+
+export type Row = {
+    columns: string[],
+    values: string[]
+}
+
 export type Database = {
     name: string,
     schemas: {

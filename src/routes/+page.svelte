@@ -15,6 +15,7 @@
 	import { toDatabase } from '$lib/lens/types';
 	import SchemaDialog from '$lib/components/app/SchemaDialog.svelte';
 	import TableDialog from '$lib/components/app/TableDialog.svelte';
+	import QueryTabs from '$lib/components/app/query/QueryTabs.svelte';
 
 	let menu: Menu;
 	let anchor: HTMLDivElement;
@@ -53,7 +54,7 @@
 			.then(() => {
 				snack(`Database ${db} has been created`);
 			})
-			.catch((err) => {
+			.catch((err: string) => {
 				snack(`Error creating database: ${err}`);
 			});
 
@@ -68,7 +69,7 @@
 			.then(() => {
 				snack(`Schema ${schema.name} on database ${schema.database} has been created`);
 			})
-			.catch((err) => {
+			.catch((err: string) => {
 				snack(`Error creating schema: ${err}`);
 			});
 
@@ -77,7 +78,7 @@
 
 	async function createTable() {
 		const table = await tableDialog.show();
-		const table_ref = `${table.database}.${table.schema}.${table.name}`;
+		const table_ref = `${table.name}`;
 
 		const query = `CREATE EXTERNAL TABLE ${table_ref}
              STORED AS ${table.file_type}
@@ -87,7 +88,7 @@
 			.then(() => {
 				snack(`Table ${table_ref} has been created`);
 			})
-			.catch((err) => {
+			.catch((err: string) => {
 				snack(`Error creating table ${table_ref}: ${err}`);
 			});
 
@@ -110,66 +111,77 @@
 			</Section>
 		</Row>
 	</TopAppBar>
-	<div class="flex ml-1 gap-2 items-center">
-		<div
-			class={Object.keys(anchorClasses).join(' ')}
-			use:Anchor={{
-				addClass: (className) => {
-					if (!anchorClasses[className]) {
-						anchorClasses[className] = true;
-					}
-				},
-				removeClass: (className) => {
-					if (anchorClasses[className]) {
-						delete anchorClasses[className];
-						anchorClasses = anchorClasses;
-					}
-				}
-			}}
-			bind:this={anchor}
-		>
-			<Fab color="primary" class="w-12 h-12" on:click={() => menu.setOpen(true)}>
-				<Icon icon="mdi:add" width="24" height="24" />
-			</Fab>
-			<Menu bind:this={menu} anchor={false} bind:anchorElement={anchor} anchorCorner="BOTTOM_END">
-				<List dense>
-					<Item on:SMUI:action={createDatabase}>
-						<Graphic class="material-icons">
-							<Icon icon="mdi:database-outline" width="24" height="24" />
-						</Graphic>
-						<Text>Database</Text>
-					</Item>
-					<Item on:SMUI:action={createSchema}>
-						<Graphic class="material-icons">
-							<Icon icon="ic:outline-schema" width="24" height="24" />
-						</Graphic>
-						<Text>Schema</Text>
-					</Item>
-					<Item on:SMUI:action={createTable}>
-						<Graphic class="material-icons">
-							<Icon icon="mdi:table" width="24" height="24" />
-						</Graphic>
-						<Text>Table</Text>
-					</Item>
-				</List>
-			</Menu>
+
+	<div class="flex flex-row gap-5">
+		<div class="flex flex-col gap-2 w-1/3">
+			<div class="flex flex-nowrap ml-2 gap-2 items-center">
+				<div
+					class={Object.keys(anchorClasses).join(' ')}
+					use:Anchor={{
+						addClass: (className) => {
+							if (!anchorClasses[className]) {
+								anchorClasses[className] = true;
+							}
+						},
+						removeClass: (className) => {
+							if (anchorClasses[className]) {
+								delete anchorClasses[className];
+								anchorClasses = anchorClasses;
+							}
+						}
+					}}
+					bind:this={anchor}
+				>
+					<Fab color="primary" class="w-12 h-12" on:click={() => menu.setOpen(true)}>
+						<Icon icon="mdi:add" width="24" height="24" />
+					</Fab>
+					<Menu
+						bind:this={menu}
+						anchor={false}
+						bind:anchorElement={anchor}
+						anchorCorner="BOTTOM_LEFT"
+					>
+						<List dense>
+							<Item on:SMUI:action={createDatabase}>
+								<Graphic class="material-icons">
+									<Icon icon="mdi:database-outline" width="24" height="24" />
+								</Graphic>
+								<Text>Database</Text>
+							</Item>
+							<Item on:SMUI:action={createSchema}>
+								<Graphic class="material-icons">
+									<Icon icon="ic:outline-schema" width="24" height="24" />
+								</Graphic>
+								<Text>Schema</Text>
+							</Item>
+							<Item on:SMUI:action={createTable}>
+								<Graphic class="material-icons">
+									<Icon icon="mdi:table" width="24" height="24" />
+								</Graphic>
+								<Text>Table</Text>
+							</Item>
+						</List>
+					</Menu>
+
+					<Button color="primary" variant="outlined">
+						<Icon icon="carbon:query" width="24" height="24" />
+						<Label>New query</Label>
+					</Button>
+
+					<Button color="primary" variant="outlined" on:click={() => (databases = refresh())}>
+						<Icon icon="mdi:refresh" width="24" height="24" />
+						<Label>Refresh</Label>
+					</Button>
+				</div>
+			</div>
+			<div class="bg-white shadow shadow-purple-500 shrink text-xs ml-2">
+				{#await databases then databases}
+					<ExploreTree {databases} />
+				{/await}
+			</div>
 		</div>
 
-		<Button color="primary" variant="outlined">
-			<Icon icon="carbon:query" width="24" height="24" />
-			<Label>New query</Label>
-		</Button>
-
-		<Button color="primary" variant="outlined" on:click={() => (databases = refresh())}>
-			<Icon icon="mdi:refresh" width="24" height="24" />
-			<Label>Refresh</Label>
-		</Button>
-	</div>
-
-	<div class="bg-white shadow shadow-slate-400 max-w-sm text-xs">
-		{#await databases then databases}
-			<ExploreTree {databases} />
-		{/await}
+		<QueryTabs />
 	</div>
 </div>
 
@@ -194,17 +206,5 @@
 		.top-app-bar-container {
 			margin-right: 0;
 		}
-	}
-
-	.flexor {
-		display: inline-flex;
-		flex-direction: column;
-	}
-
-	.flexor-content {
-		flex-basis: 0;
-		height: 0;
-		flex-grow: 1;
-		overflow: auto;
 	}
 </style>
