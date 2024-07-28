@@ -12,75 +12,72 @@
 	import FormField from '@smui/form-field';
 	import Switch from '@smui/switch';
 
+	import { type QueryData } from './types';
+
 	import './style.scss';
 
-	let query: string = '';
-	let queryAll: boolean = false;
-	let streamId: string | undefined = undefined;
-	let queryError: string | undefined = undefined;
+	export let data: QueryData;
 
-	let columns: string[] = [];
-	let rows: string[][] = [];
+	$: start = data.currentPage * data.rowsPerPage;
+	$: end = Math.min(start + data.rowsPerPage, data.rows.length);
+	$: slice = data.rows.slice(start, end);
+	$: lastPage = Math.max(Math.ceil(data.rows.length / data.rowsPerPage) - 1, 0);
 
-	let rowsPerPage = 10;
-	let currentPage = 0;
-
-	$: start = currentPage * rowsPerPage;
-	$: end = Math.min(start + rowsPerPage, rows.length);
-	$: slice = rows.slice(start, end);
-	$: lastPage = Math.max(Math.ceil(rows.length / rowsPerPage) - 1, 0);
-
-	$: hasStream = typeof streamId !== 'undefined';
-
-	$: if (currentPage > lastPage) {
-		currentPage = lastPage;
-	}
+	$: hasStream = typeof data.streamId !== 'undefined';
 
 	let loaded: boolean = true;
 
+	function reset() {
+		data = {
+			...data,
+			streamId: undefined,
+			queryError: undefined,
+			columns: [],
+			rows: []
+		};
+	}
+
 	async function queryNext() {
-		if (typeof streamId !== 'undefined') {
-			queryError = undefined;
+		if (typeof data.streamId !== 'undefined') {
+			data.queryError = undefined;
 			try {
 				loaded = false;
-				let res = await stream_next(streamId);
+				let res = await stream_next(data.streamId);
 
-				if (queryAll) {
-					while (res?.length > 0) {
-						columns = res[0].columns;
-
+				if (data.queryAll) {
+					while (res?.length > 0 && data.queryAll) {
 						const batch = res.map((r) => r.values);
-						rows = [...rows, ...batch];
-						res = await stream_next(streamId);
+						data.rows = [...data.rows, ...batch];
+						res = await stream_next(data.streamId);
 					}
 
-					streamId = undefined;
+					if (res?.length == 0) {
+						data.streamId = undefined;
+					}
 				} else if (res?.length > 0) {
-					columns = res[0].columns;
+					data.columns = res[0].columns;
 
 					const batch = res.map((r) => r.values);
-					rows = [...rows, ...batch];
+					data.rows = [...data.rows, ...batch];
 				} else {
-					streamId = undefined;
+					data.streamId = undefined;
 				}
 			} catch (e) {
-				queryError = e;
+				data.queryError = e;
 			} finally {
 				loaded = true;
+				data = data;
 			}
 		}
 	}
 
 	async function runQuery() {
-		columns = [];
-		rows = [];
-		streamId = undefined;
-
+		reset();
 		try {
-			streamId = await sql_stream(query);
+			data.streamId = await sql_stream(data.queryString);
 			await queryNext();
 		} catch (e) {
-			queryError = e;
+			data.queryError = e;
 		}
 	}
 </script>
@@ -104,20 +101,20 @@
 		</Button>
 
 		<FormField>
-			<Switch focusRing bind:checked={queryAll} />
+			<Switch focusRing bind:checked={data.queryAll} />
 			<span slot="label">Query all</span>
 		</FormField>
 	</div>
 
-	<Textfield variant="outlined" textarea ripple bind:value={query} label="Query" />
-	{#if queryError}
-		<p class="text-red-600">{queryError}</p>
+	<Textfield variant="outlined" textarea ripple bind:value={data.queryString} label="Query" />
+	{#if data.queryError}
+		<p class="text-red-600">{data.queryError}</p>
 	{/if}
 
 	<DataTable table$aria-label="Table" class="rows-table">
 		<Head>
 			<Row>
-				{#each columns as column}
+				{#each data.columns as column}
 					<Cell>{column}</Cell>
 				{/each}
 			</Row>
@@ -136,29 +133,41 @@
 		<Pagination slot="paginate">
 			<svelte:fragment slot="rowsPerPage">
 				<Label>Rows Per Page</Label>
-				<Select variant="outlined" bind:value={rowsPerPage} noLabel>
+				<Select variant="outlined" bind:value={data.rowsPerPage} noLabel>
 					<Option value={10}>10</Option>
 					<Option value={25}>25</Option>
 					<Option value={100}>100</Option>
 				</Select>
 			</svelte:fragment>
 			<svelte:fragment slot="total">
-				{start + 1}-{end} of {rows.length}
+				{start + 1}-{end} of {data.rows.length}
 			</svelte:fragment>
 
-			<IconButton tag="button" on:click={() => (currentPage = 0)} disabled={currentPage === 0}>
+			<IconButton
+				tag="button"
+				on:click={() => (data.currentPage = 0)}
+				disabled={data.currentPage === 0}
+			>
 				<Icon icon="material-symbols:first-page" />
 			</IconButton>
-			<IconButton tag="button" on:click={() => currentPage--} disabled={currentPage === 0}>
+			<IconButton
+				tag="button"
+				on:click={() => data.currentPage--}
+				disabled={data.currentPage === 0}
+			>
 				<Icon icon="material-symbols:chevron-left" />
 			</IconButton>
-			<IconButton tag="button" on:click={() => currentPage++} disabled={currentPage === lastPage}>
+			<IconButton
+				tag="button"
+				on:click={() => data.currentPage++}
+				disabled={data.currentPage === lastPage}
+			>
 				<Icon icon="material-symbols:chevron-right" />
 			</IconButton>
 			<IconButton
 				tag="button"
-				on:click={() => (currentPage = lastPage)}
-				disabled={currentPage === lastPage}
+				on:click={() => (data.currentPage = lastPage)}
+				disabled={data.currentPage === lastPage}
 			>
 				<Icon icon="material-symbols:last-page" />
 			</IconButton>

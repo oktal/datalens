@@ -5,17 +5,67 @@
 	import Icon from '@iconify/svelte';
 	import IconButton from '@smui/icon-button';
 	import QueryTab from './QueryTab.svelte';
+	import { type QueryData } from './types';
+	import TableDialog from '../TableDialog.svelte';
 
-	let active = 'Home';
+	export function createTab() {
+		let nextQueryId = ++queryId;
+		queries = [
+			...queries,
+			{
+				id: nextQueryId,
+				data: createQuery()
+			}
+		];
+	}
 
-	function closeTab(tab: string): void {
-		console.log(`close ${tab}`);
+	let queries: Array<{ id: number; data: QueryData }> = [
+		{
+			id: 1,
+			data: {
+				queryString: '',
+				queryAll: false,
+				streamId: undefined,
+				queryError: undefined,
+
+				columns: [],
+				rows: [],
+
+				rowsPerPage: 10,
+				currentPage: 0
+			}
+		}
+	];
+
+	let active = queries[0];
+	let queryId = queries[0].id;
+
+	function createQuery(): QueryData {
+		return {
+			queryString: '',
+			queryAll: false,
+			streamId: undefined,
+			queryError: undefined,
+
+			columns: [],
+			rows: [],
+
+			rowsPerPage: 10,
+			currentPage: 0
+		};
+	}
+
+	function closeTab(tab: { id: number }): void {
+		const tabIndex = queries.findIndex((q) => q.id == tab.id);
+		if (tabIndex != -1) {
+			queries = [...queries.slice(0, tabIndex), ...queries.slice(tabIndex + 1)];
+		}
 	}
 
 	function onTabMounted(e: CustomEvent<SMUITabAccessor>): void {
 		const { tabId, element } = e.detail;
 
-		const closeButtonQueryId = `#tab-close-${tabId}`;
+		const closeButtonQueryId = `#tab-close-${tabId.id}`;
 
 		element?.addEventListener('click', (e: MouseEvent) => {
 			if (e.target instanceof Element) {
@@ -37,12 +87,12 @@
 	<!--
     Note: tabs must be unique. (They cannot === each other.)
   -->
-	<TabBar tabs={['Query1', 'Query2', 'Query3']} let:tab bind:active>
+	<TabBar tabs={queries} let:tab bind:active>
 		<Tab {tab} minWidth on:SMUITab:mount={(e) => onTabMounted(e)}>
 			<Label>
-				{tab}
+				Query{tab.id}
 			</Label>
-			<IconButton size="mini" id="tab-close-{tab}">
+			<IconButton size="mini" id="tab-close-{tab.id}">
 				<Icon icon="mdi:close" />
 			</IconButton>
 		</Tab>
@@ -50,7 +100,7 @@
 
 	<Paper variant="unelevated" class="w-full">
 		<Content>
-			<QueryTab />
+			<QueryTab data={active.data} />
 		</Content>
 	</Paper>
 </div>

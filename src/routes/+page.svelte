@@ -26,6 +26,8 @@
 	let tableDialog: TableDialog;
 	let kitchen: Kitchen;
 
+	let queryTabs: QueryTabs;
+
 	let databases: Promise<Database[]> = refresh();
 
 	function snack(text: string) {
@@ -161,7 +163,7 @@
 						</List>
 					</Menu>
 
-					<Button color="primary" variant="outlined">
+					<Button color="primary" variant="outlined" on:click={() => queryTabs.createTab()}>
 						<Icon icon="carbon:query" width="24" height="24" />
 						<Label>New query</Label>
 					</Button>
@@ -179,7 +181,7 @@
 			</div>
 		</div>
 
-		<QueryTabs />
+		<QueryTabs bind:this={queryTabs} />
 	</div>
 </div>
 
