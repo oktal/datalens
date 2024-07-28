@@ -78,11 +78,9 @@
 
 	async function createTable() {
 		const table = await tableDialog.show();
-		const table_ref = `${table.name}`;
+		const table_ref = `${table.database}.${table.schema}.${table.name}`;
 
-		const query = `CREATE EXTERNAL TABLE ${table_ref}
-             STORED AS ${table.file_type}
-             LOCATION '${table.location}'`;
+		const query = `CREATE EXTERNAL TABLE ${table_ref} STORED AS ${table.file_type} LOCATION '${table.location}'`;
 
 		await sql(query)
 			.then(() => {

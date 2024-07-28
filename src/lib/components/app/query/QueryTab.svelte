@@ -17,6 +17,7 @@
 	let query: string = '';
 	let queryAll: boolean = false;
 	let streamId: string | undefined = undefined;
+	let queryError: string | undefined = undefined;
 
 	let columns: string[] = [];
 	let rows: string[][] = [];
@@ -39,34 +40,48 @@
 
 	async function queryNext() {
 		if (typeof streamId !== 'undefined') {
-			loaded = false;
-			let res = await stream_next(streamId);
+			queryError = undefined;
+			try {
+				loaded = false;
+				let res = await stream_next(streamId);
 
-			if (queryAll) {
-				while (res.length > 0) {
+				if (queryAll) {
+					while (res?.length > 0) {
+						columns = res[0].columns;
+
+						const batch = res.map((r) => r.values);
+						rows = [...rows, ...batch];
+						res = await stream_next(streamId);
+					}
+
+					streamId = undefined;
+				} else if (res?.length > 0) {
 					columns = res[0].columns;
 
 					const batch = res.map((r) => r.values);
 					rows = [...rows, ...batch];
-					res = await stream_next(streamId);
+				} else {
+					streamId = undefined;
 				}
-			} else if (res.length > 0) {
-				columns = res[0].columns;
-
-				const batch = res.map((r) => r.values);
-				rows = [...rows, ...batch];
+			} catch (e) {
+				queryError = e;
+			} finally {
+				loaded = true;
 			}
-
-			loaded = true;
 		}
 	}
 
 	async function runQuery() {
 		columns = [];
 		rows = [];
+		streamId = undefined;
 
-		streamId = await sql_stream(query);
-		await queryNext();
+		try {
+			streamId = await sql_stream(query);
+			await queryNext();
+		} catch (e) {
+			queryError = e;
+		}
 	}
 </script>
 
@@ -95,6 +110,9 @@
 	</div>
 
 	<Textfield variant="outlined" textarea ripple bind:value={query} label="Query" />
+	{#if queryError}
+		<p class="text-red-600">{queryError}</p>
+	{/if}
 
 	<DataTable table$aria-label="Table" class="rows-table">
 		<Head>
