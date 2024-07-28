@@ -32,7 +32,9 @@
 
 	{#if hasChildren}
 		<div class="grid ml-5 transition-all duration-300 ease-in-out {display}">
-			<slot />
+			<div class="overflow-hidden">
+				<slot />
+			</div>
 		</div>
 	{/if}
 </div>
