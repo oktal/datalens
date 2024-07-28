@@ -3,7 +3,7 @@
 	import Icon from '@iconify/svelte';
 	import Button, { Label } from '@smui/button';
 	import Menu from '@smui/menu';
-	import List, { Item, Separator, Text, Graphic } from '@smui/list';
+	import List, { Item, Text, Graphic } from '@smui/list';
 	import Fab from '@smui/fab';
 	import { Anchor } from '@smui/menu-surface';
 	import DatabaseDialog from '$lib/components/app/DatabaseDialog.svelte';
@@ -80,7 +80,7 @@
 		const table = await tableDialog.show();
 		const table_ref = `${table.database}.${table.schema}.${table.name}`;
 
-		const query = `CREATE EXTERNAL TABLE ${table_ref} STORED AS ${table.file_type} LOCATION '${table.location}'`;
+		const query = `CREATE EXTERNAL TABLE ${table_ref} STORED AS ${table.fileType} LOCATION '${table.location}'`;
 
 		await sql(query)
 			.then(() => {

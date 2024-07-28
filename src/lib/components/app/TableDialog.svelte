@@ -1,20 +1,24 @@
 <script lang="ts" context="module">
 	import { type Database, type FileType } from '$lib/lens/types';
 
-	export type TableFormData = {
+	export type CreateTable = {
 		database: string;
 		schema: string;
 		name: string;
+		partitionColumns: string[];
 
-		file_type: FileType;
+		fileType: FileType;
 		location: string;
-		options: Record<string, string | boolean>;
+		options: {
+			[k: string]: string | number | boolean;
+		};
 	};
 </script>
 
 <script lang="ts">
 	import Dialog, { Title, Content, Actions, InitialFocus } from '@smui/dialog';
 	import Button, { Label } from '@smui/button';
+	import List, { Item, Meta } from '@smui/list';
 	import IconButton from '@smui/icon-button';
 	import Textfield from '@smui/textfield';
 	import Select, { Option } from '@smui/select';
@@ -25,6 +29,7 @@
 
 	import { createHandle } from '$lib/dialog-handle';
 	import { open } from '@tauri-apps/api/dialog';
+	import Fab from '@smui/fab';
 
 	type LocationType = 'local' | 'https' | 'aws' | 'gcs';
 	type CsvOptions = {
@@ -44,18 +49,10 @@
 		return handle.show();
 	}
 
-	function updateFileType(file_type: FileType) {
-		data.file_type = file_type;
-	}
-
-	function updateLocationType(location_type: LocationType) {
-		locationType = location_type;
-	}
-
 	async function browseTable() {
 		const selected = await open({
 			multiple: false,
-			directory: browse_folder
+			directory: browseFolder
 		});
 
 		if (Array.isArray(selected)) {
@@ -65,32 +62,61 @@
 		}
 	}
 
-	let data: TableFormData = {
+	function addPartitionColumn() {
+		create.partitionColumns = [...create.partitionColumns, ''];
+	}
+
+	function deletePartitionColumn(index: number) {
+		create.partitionColumns = [
+			...create.partitionColumns.slice(0, index),
+			...create.partitionColumns.slice(index + 1)
+		];
+	}
+
+	function createOptions(
+		prefix: string,
+		options: Record<string, number | string | boolean>
+	): Record<string, number | string | boolean> {
+		let opts: Record<string, number | string | boolean> = {};
+		Object.entries(options).forEach((k, v) => {
+			const key = `${prefix}.${k}`;
+			opts[key] = v;
+		});
+
+		return opts;
+	}
+
+	let create: CreateTable = {
 		database: databases[0]?.name ?? '',
 		schema: databases[0]?.schemas[0]?.name ?? '',
 		name: '',
-		file_type: 'parquet',
+		partitionColumns: [],
+		fileType: 'parquet',
 		location: '',
 		options: {}
 	};
 	let locationType: LocationType;
 	let location: string = '';
-	let browse_folder: boolean = false;
+	let browseFolder: boolean = false;
 
-	let csv_options: CsvOptions = {
+	let csvOptions: CsvOptions = {
 		has_header: true,
 		delimiter: ','
 	};
-	let aws_options: AwsOptions = {
+	let awsOptions: AwsOptions = {
 		secret_key_id: '',
 		secret_access_key: '',
 		region: ''
 	};
 
-	let handle = createHandle(data);
-	handle.beforeAccept = function (value: TableFormData): boolean {
+	let handle = createHandle(create);
+	handle.beforeAccept = function (value: CreateTable): boolean {
 		if (locationType == 'aws') {
-			value.options['aws'] = aws_options;
+			value.options = { ...value.options, ...createOptions('aws', awsOptions) };
+		}
+
+		if (create.fileType == 'csv') {
+			value.options = { ...value.options, ...createOptions('csv', csvOptions) };
 		}
 
 		value.location = location;
@@ -114,7 +140,7 @@
 	};
 
 	$: schemas = databases
-		.filter((db: Database) => db.name === data.database)
+		.filter((db: Database) => db.name === create.database)
 		.flatMap((db: Database) => db.schemas);
 </script>
 
@@ -128,67 +154,84 @@
 	<Title id="list-selection-title">Create a new database</Title>
 	<Content id="list-selection-content">
 		<div class="flex flex-col m-5">
-			<Select bind:value={data.database} label="Database" use={[InitialFocus]}>
+			<Select bind:value={create.database} label="Database" use={[InitialFocus]}>
 				{#each databases as { name }}
 					<Option value={name}>{name}</Option>
 				{/each}
 			</Select>
-			<Select bind:value={data.schema} label="Schema">
+			<Select bind:value={create.schema} label="Schema">
 				{#each schemas as { name }}
 					<Option value={name}>{name}</Option>
 				{/each}
 			</Select>
-			<Textfield bind:value={data.name} label="Table" />
+			<Textfield bind:value={create.name} label="Table" />
+			<div class="flex flex-row mt-2 items-center">
+				<span>Partionned by</span>
+				<Fab color="primary" mini class="ml-auto" on:click={addPartitionColumn}>
+					<Icon icon="mdi:add" width="24" height="24" />
+				</Fab>
+			</div>
+			<List>
+				{#each create.partitionColumns as _partitionColumn, i}
+					<Item>
+						<Textfield bind:value={create.partitionColumns[i]} label="Column" />
+						<Meta>
+							<IconButton on:click={() => deletePartitionColumn(i)}>
+								<Icon icon="mdi:delete" />
+							</IconButton>
+						</Meta>
+					</Item>
+				{/each}
+			</List>
 			<span class="mt-2">File type</span>
 			<SegmentedButton segments={Object.entries(fileTypes)} let:segment>
 				<Segment
 					{segment}
-					selected={segment[0] == data.file_type}
-					on:click$preventDefault={() => updateFileType(segment[0])}
+					selected={segment[0] == create.fileType}
+					on:click$preventDefault={() => (create.fileType = segment[0])}
 				>
 					<Icon icon={segment[1]} width="24" height="24" />
 					<Label class="ml-2">{segment[0]}</Label>
 				</Segment>
 			</SegmentedButton>
 
-			{#if data.file_type == 'csv'}
+			{#if create.fileType == 'csv'}
 				<span class="mt-2">Options</span>
 				<FormField>
-					<Switch bind:checked={csv_options.has_header} />
+					<Switch bind:checked={csvOptions.has_header} />
 					<span slot="label">Has header</span>
 				</FormField>
-				<Textfield bind:value={csv_options.delimiter} label="Delimiter" />
+				<Textfield bind:value={csvOptions.delimiter} label="Delimiter" />
 			{/if}
+
 			<span class="mt-2">Location</span>
 			<SegmentedButton segments={Object.entries(locationTypes)} let:segment>
 				<Segment
 					{segment}
 					selected={segment[0] == locationType}
-					on:click$preventDefault={() => updateLocationType(segment[0])}
+					on:click$preventDefault={() => (locationType = segment[0])}
 				>
 					<Icon icon={segment[1]} width="24" height="24" />
 					<Label class="ml-2">{segment[0]}</Label>
 				</Segment>
 			</SegmentedButton>
-			{#if locationType == 'aws'}
-				<span class="mt-2">Options</span>
-				<Textfield bind:value={aws_options.secret_key_id} label="Secret key id" />
-				<Textfield bind:value={aws_options.secret_access_key} label="Secret access key" />
-				<Textfield bind:value={aws_options.region} label="Region" />
-			{/if}
-
-			{#if locationType == 'local'}
-				<div class="flex tems-center">
+			<div class="flex items-center content-center gap-2">
+				{#if locationType == 'aws'}
+					<span class="mt-2">Options</span>
+					<Textfield bind:value={awsOptions.secret_key_id} label="Secret key id" />
+					<Textfield bind:value={awsOptions.secret_access_key} label="Secret access key" />
+					<Textfield bind:value={awsOptions.region} label="Region" />
+				{:else if locationType == 'local'}
 					<Textfield bind:value={location} label="Location" class="w-full" />
 					<FormField>
-						<Switch bind:checked={browse_folder} />
+						<Switch bind:checked={browseFolder} />
 						<span slot="label">Folder</span>
 					</FormField>
 					<IconButton on:click={browseTable}>
 						<Icon icon="flowbite:dots-horizontal-outline" width="24" height="24" />
 					</IconButton>
-				</div>
-			{/if}
+				{/if}
+			</div>
 		</div>
 	</Content>
 	<Actions>
