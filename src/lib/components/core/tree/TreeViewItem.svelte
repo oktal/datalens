@@ -2,8 +2,6 @@
 	import Icon from '@iconify/svelte';
 	import IconButton from '@smui/icon-button';
 
-	export let label: string;
-
 	let expanded = false;
 
 	$: hasChildren = $$slots.default;
@@ -17,22 +15,22 @@
 </script>
 
 <div class="flex flex-col">
-	<div class="flex gap-1 items-center overflow-auto">
-		<IconButton on:click={expand} class="w-8 h-8 p-1">
-			{#if expanded}
-				<Icon icon="carbon:caret-down" />
-			{:else if needToggle}
-				<Icon icon="carbon:caret-right" />
-			{/if}
-		</IconButton>
-		<slot name="item-start" />
-
-		{label}
+	<div class="flex items-center overflow-auto">
+		{#if hasChildren}
+			<IconButton on:click={expand} class="w-8 h-8 p-1">
+				{#if expanded}
+					<Icon icon="carbon:caret-down" />
+				{:else if needToggle}
+					<Icon icon="carbon:caret-right" />
+				{/if}
+			</IconButton>
+		{/if}
+		<slot name="content" />
 	</div>
 
 	{#if hasChildren}
 		<div class="grid ml-5 transition-all duration-300 ease-in-out {display}">
-			<div class="overflow-hidden">
+			<div class="flex flex-col gap-2 overflow-hidden">
 				<slot />
 			</div>
 		</div>
