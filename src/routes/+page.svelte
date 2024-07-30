@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { toast } from '@zerodevx/svelte-toast';
 	import TopAppBar, { Row, Section, Title } from '@smui/top-app-bar';
 	import Icon from '@iconify/svelte';
 	import Button, { Label } from '@smui/button';
@@ -7,7 +8,7 @@
 	import Fab from '@smui/fab';
 	import { Anchor } from '@smui/menu-surface';
 	import DatabaseDialog from '$lib/components/app/DatabaseDialog.svelte';
-	import ExploreTree from '$lib/components/app/ExploreTree.svelte';
+	import Tree from '$lib/components/app/Tree.svelte';
 
 	import { sql, listDatabases } from '$lib/lens/api';
 	import Kitchen from '@smui/snackbar/kitchen';
@@ -30,16 +31,6 @@
 
 	let databases: Promise<Database[]> = refresh();
 
-	function snack(text: string) {
-		kitchen.push({
-			props: {
-				variant: 'stacked'
-			},
-			label: text,
-			dismissButton: true
-		});
-	}
-
 	async function refresh() {
 		const dbs = await listDatabases().then((models: DatabaseModel[]) => {
 			return models.map((model: DatabaseModel) => toDatabase(model));
@@ -52,13 +43,12 @@
 		const db = await databaseDialog.show();
 		const query = `CREATE DATABASE ${db}`;
 
-		await sql(query)
-			.then(() => {
-				snack(`Database ${db} has been created`);
-			})
-			.catch((err: string) => {
-				snack(`Error creating database: ${err}`);
-			});
+		try {
+			await sql(query);
+			toast.push(`Database ${db} has been created`);
+		} catch (e) {
+			toast.push(`Error creating database ${db}: ${e}`, { classes: [`warn`], pausable: true });
+		}
 
 		databases = refresh();
 	}
@@ -66,31 +56,30 @@
 	async function createSchema() {
 		const schema = await schemaDialog.show();
 
-		const query = `CREATE SCHEMA ${schema.database}.${schema.name}`;
-		await sql(query)
-			.then(() => {
-				snack(`Schema ${schema.name} on database ${schema.database} has been created`);
-			})
-			.catch((err: string) => {
-				snack(`Error creating schema: ${err}`);
-			});
+		const schemaRef = `${schema.database}.${schema.name}`;
+		const query = `CREATE SCHEMA ${schemaRef}`;
+		try {
+			await sql(query);
+			toast.push(`Schema ${schemaRef} has been created`);
+		} catch (e) {
+			toast.push(`Error creating ${schemaRef}: ${e}`, { classes: ['warn'], pausable: true });
+		}
 
 		databases = refresh();
 	}
 
 	async function createTable() {
 		const table = await tableDialog.show();
-		const table_ref = `${table.database}.${table.schema}.${table.name}`;
+		const tableRef = `${table.database}.${table.schema}.${table.name}`;
 
-		const query = `CREATE EXTERNAL TABLE ${table_ref} STORED AS ${table.fileType} LOCATION '${table.location}'`;
+		const query = `CREATE EXTERNAL TABLE ${tableRef} STORED AS ${table.fileType} LOCATION '${table.location}'`;
 
-		await sql(query)
-			.then(() => {
-				snack(`Table ${table_ref} has been created`);
-			})
-			.catch((err: string) => {
-				snack(`Error creating table ${table_ref}: ${err}`);
-			});
+		try {
+			await sql(query);
+			toast.push(`Table ${tableRef} has been created`);
+		} catch (e) {
+			toast.push(`Error creating table ${tableRef}: ${e}`, { classes: ['warn'], pausable: true });
+		}
 
 		databases = refresh();
 	}
@@ -113,8 +102,8 @@
 	</TopAppBar>
 
 	<div class="flex flex-row gap-5">
-		<div class="flex flex-col gap-2 w-1/3">
-			<div class="flex flex-nowrap ml-2 gap-2 items-center">
+		<div class="flex flex-col gap-2 w-full max-w-[25vw]">
+			<div class="flex flex-nowrap ml-2 gap-2 items-center justify-start">
 				<div
 					class={Object.keys(anchorClasses).join(' ')}
 					use:Anchor={{
@@ -162,21 +151,30 @@
 							</Item>
 						</List>
 					</Menu>
-
-					<Button color="primary" variant="outlined" on:click={() => queryTabs.createTab()}>
-						<Icon icon="carbon:query" width="24" height="24" />
-						<Label>New query</Label>
-					</Button>
-
-					<Button color="primary" variant="outlined" on:click={() => (databases = refresh())}>
-						<Icon icon="mdi:refresh" width="24" height="24" />
-						<Label>Refresh</Label>
-					</Button>
 				</div>
+				<Button
+					color="primary"
+					variant="outlined"
+					on:click={() => queryTabs.createTab()}
+					class="flex flex-nowrap gap-2"
+				>
+					<Icon icon="carbon:query" width="24" height="24" />
+					<Label class="flex flex-nowrap">New query</Label>
+				</Button>
+
+				<Button
+					color="primary"
+					variant="outlined"
+					on:click={() => (databases = refresh())}
+					class="flex flex-nowrap gap-2"
+				>
+					<Icon icon="mdi:refresh" width="24" height="24" />
+					<Label>Refresh</Label>
+				</Button>
 			</div>
-			<div class="bg-white shadow shadow-purple-500 shrink text-xs ml-2">
+			<div class="bg-white shadow shadow-purple-500 text-xs ml-2">
 				{#await databases then databases}
-					<ExploreTree {databases} />
+					<Tree {databases} />
 				{/await}
 			</div>
 		</div>

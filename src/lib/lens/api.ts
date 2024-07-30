@@ -10,7 +10,7 @@ export async function sql(query: string) {
     return res;
 }
 
-export async function sql_stream(query: string): Promise<StreamId> {
+export async function streamCreate(query: string): Promise<StreamId> {
     const res = await invoke<StreamId>("sql_stream", {
         query
     });
@@ -18,7 +18,7 @@ export async function sql_stream(query: string): Promise<StreamId> {
     return res;
 }
 
-export async function stream_next(stream: StreamId): Promise<Row[]> {
+export async function streamFetch(stream: StreamId): Promise<Row[]> {
     const res = await invoke<Row[]>("stream_next", {
         streamId: stream
     });

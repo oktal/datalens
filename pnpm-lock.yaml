@@ -99,6 +99,9 @@ importers:
       '@types/eslint':
         specifier: ^8.56.7
         version: 8.56.10
+      '@zerodevx/svelte-toast':
+        specifier: ^0.9.5
+        version: 0.9.5(svelte@4.2.18)
       autoprefixer:
         specifier: ^10.4.19
         version: 10.4.19(postcss@8.4.39)
@@ -784,6 +787,11 @@ packages:
   '@typescript-eslint/visitor-keys@8.0.0-alpha.47':
     resolution: {integrity: sha512-k2CQOfSBZXmAmM/WUoykxMZxEoA1+JHwbVkl2Tf2RimH11XrnFMyyx81XE/DCjbfLsHexNhHBhBj74Ga9kGlgg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@zerodevx/svelte-toast@0.9.5':
+    resolution: {integrity: sha512-JLeB/oRdJfT+dz9A5bgd3Z7TuQnBQbeUtXrGIrNWMGqWbabpepBF2KxtWVhL2qtxpRqhae2f6NAOzH7xs4jUSw==}
+    peerDependencies:
+      svelte: ^3.57.0 || ^4.0.0
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -3038,6 +3046,10 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 8.0.0-alpha.47
       eslint-visitor-keys: 3.4.3
+
+  '@zerodevx/svelte-toast@0.9.5(svelte@4.2.18)':
+    dependencies:
+      svelte: 4.2.18
 
   acorn-jsx@5.3.2(acorn@8.12.1):
     dependencies:

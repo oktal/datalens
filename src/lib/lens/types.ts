@@ -47,7 +47,7 @@ export type Database = {
                 }[],
                 metadata: Record<string, string>,
             }
-        }
+        }[]
     }[]
 }
 
