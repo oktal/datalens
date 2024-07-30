@@ -2,7 +2,7 @@ export type QueryData = {
     queryString: string,
     queryAll: boolean,
     streamId?: string,
-    queryError?: string,
+    queryError?: any,
 
     columns: string[],
     rows: string[][],

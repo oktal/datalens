@@ -6,7 +6,7 @@
 	import LinearProgress from '@smui/linear-progress';
 	import { Label } from '@smui/common';
 
-	import { sql_stream, stream_next } from '$lib/lens/api';
+	import { streamCreate, streamFetch } from '$lib/lens/api';
 	import Select, { Option } from '@smui/select';
 	import IconButton from '@smui/icon-button';
 	import FormField from '@smui/form-field';
@@ -42,13 +42,13 @@
 			data.queryError = undefined;
 			try {
 				loaded = false;
-				let res = await stream_next(data.streamId);
+				let res = await streamFetch(data.streamId);
 
 				if (data.queryAll) {
 					while (res?.length > 0 && data.queryAll) {
-						const batch = res.map((r) => r.values);
+						const batch = res.map((r: Row) => r.values);
 						data.rows = [...data.rows, ...batch];
-						res = await stream_next(data.streamId);
+						res = await streamFetch(data.streamId);
 					}
 
 					if (res?.length == 0) {
@@ -57,12 +57,12 @@
 				} else if (res?.length > 0) {
 					data.columns = res[0].columns;
 
-					const batch = res.map((r) => r.values);
+					const batch = res.map((r: Row) => r.values);
 					data.rows = [...data.rows, ...batch];
 				} else {
 					data.streamId = undefined;
 				}
-			} catch (e) {
+			} catch (e: any) {
 				data.queryError = e;
 			} finally {
 				loaded = true;
@@ -74,9 +74,9 @@
 	async function runQuery() {
 		reset();
 		try {
-			data.streamId = await sql_stream(data.queryString);
+			data.streamId = await streamCreate(data.queryString);
 			await queryNext();
-		} catch (e) {
+		} catch (e: any) {
 			data.queryError = e;
 		}
 	}
@@ -111,7 +111,7 @@
 		<p class="text-red-600">{data.queryError}</p>
 	{/if}
 
-	<DataTable table$aria-label="Table" class="rows-table">
+	<DataTable table$aria-label="Table" class="rows-table w-full max-w-[75vw]">
 		<Head>
 			<Row>
 				{#each data.columns as column}
