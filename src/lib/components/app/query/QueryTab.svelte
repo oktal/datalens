@@ -46,7 +46,7 @@
 
 				if (data.queryAll) {
 					while (res?.length > 0 && data.queryAll) {
-						const batch = res.map((r: Row) => r.values);
+						const batch = res.map((r: any) => r.values);
 						data.rows = [...data.rows, ...batch];
 						res = await streamFetch(data.streamId);
 					}
@@ -57,7 +57,7 @@
 				} else if (res?.length > 0) {
 					data.columns = res[0].columns;
 
-					const batch = res.map((r: Row) => r.values);
+					const batch = res.map((r: any) => r.values);
 					data.rows = [...data.rows, ...batch];
 				} else {
 					data.streamId = undefined;
@@ -66,7 +66,6 @@
 				data.queryError = e;
 			} finally {
 				loaded = true;
-				data = data;
 			}
 		}
 	}

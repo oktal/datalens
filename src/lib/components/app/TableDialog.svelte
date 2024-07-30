@@ -110,7 +110,7 @@
 	};
 
 	let handle = createHandle(create);
-	handle.beforeAccept = function (value: CreateTable): boolean {
+	handle.beforeAccept = (value: CreateTable): boolean => {
 		if (locationType == 'aws') {
 			value.options = { ...value.options, ...createOptions('aws', awsOptions) };
 		}
@@ -122,6 +122,17 @@
 		value.location = location;
 
 		return true;
+	};
+
+	handle.reset = (value: CreateTable) => {
+		value = {
+			...value,
+			name: '',
+			partitionColumns: [],
+			fileType: 'parquet',
+			location: '',
+			options: {}
+		};
 	};
 
 	const fileTypes: Record<FileType, string> = {

@@ -5,6 +5,7 @@ export class DialogHandle<T> {
     value: T;
 
     beforeAccept?: (value: T) => boolean;
+    reset?: (value: T) => void;
 
     resolve_?: (value: T) => void;
     reject_?: (reason?: any) => void;
@@ -23,12 +24,20 @@ export class DialogHandle<T> {
     }
 
     accept() {
-        if (this.beforeAccept != undefined) {
+        if (this.beforeAccept) {
             if (!this.beforeAccept(this.value))
                 return;
         }
+
         this.close();
-        if (this.resolve_ != undefined) this.resolve_(this.value);
+
+        if (this.resolve_) {
+            const value = structuredClone(this.value);
+            if (this.reset)
+                this.reset(this.value);
+            this.resolve_(value);
+
+        }
     }
 
     cancel() {

@@ -24,6 +24,12 @@
 		name: ''
 	};
 	let handle = createHandle(data);
+	handle.reset = (value: SchemaFormData) => {
+		value = {
+			database: databases[0] ?? '',
+			name: ''
+		};
+	};
 </script>
 
 <Dialog
