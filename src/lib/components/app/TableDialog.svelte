@@ -28,8 +28,9 @@
 	import Icon from '@iconify/svelte';
 
 	import { createHandle } from '$lib/dialog-handle';
-	import { open } from '@tauri-apps/api/dialog';
 	import Fab from '@smui/fab';
+	import AwsParameters from './parameters/AwsParameters.svelte';
+	import LocalParameters from './parameters/LocalParameters.svelte';
 
 	type LocationType = 'local' | 'https' | 'aws' | 'gcs';
 	type CsvOptions = {
@@ -37,29 +38,10 @@
 		delimiter: string;
 	};
 
-	type AwsOptions = {
-		secret_key_id: string;
-		secret_access_key: string;
-		region: string;
-	};
-
 	export let databases: Database[] = [];
 
 	export function show() {
 		return handle.show();
-	}
-
-	async function browseTable() {
-		const selected = await open({
-			multiple: false,
-			directory: browseFolder
-		});
-
-		if (Array.isArray(selected)) {
-			location = selected[0];
-		} else if (selected != null) {
-			location = selected;
-		}
 	}
 
 	function addPartitionColumn() {
@@ -95,9 +77,25 @@
 		location: '',
 		options: {}
 	};
-	let locationType: LocationType;
-	let location: string = '';
-	let browseFolder: boolean = false;
+	let locationType: LocationType = 'local';
+	let location: Record<LocationType, { label: string; value: string }> = {
+		local: {
+			label: 'Path',
+			value: ''
+		},
+		https: {
+			label: 'URL',
+			value: ''
+		},
+		aws: {
+			label: 'S3 URL',
+			value: ''
+		},
+		gcs: {
+			label: 'URL',
+			value: ''
+		}
+	};
 
 	let csvOptions: CsvOptions = {
 		has_header: true,
@@ -119,8 +117,7 @@
 			value.options = { ...value.options, ...createOptions('csv', csvOptions) };
 		}
 
-		value.location = location;
-
+		value.location = location[locationType].value;
 		return true;
 	};
 
@@ -226,23 +223,16 @@
 					<Label class="ml-2">{segment[0]}</Label>
 				</Segment>
 			</SegmentedButton>
-			<div class="flex items-center content-center gap-2">
-				{#if locationType == 'aws'}
-					<span class="mt-2">Options</span>
-					<Textfield bind:value={awsOptions.secret_key_id} label="Secret key id" />
-					<Textfield bind:value={awsOptions.secret_access_key} label="Secret access key" />
-					<Textfield bind:value={awsOptions.region} label="Region" />
-				{:else if locationType == 'local'}
-					<Textfield bind:value={location} label="Location" class="w-full" />
-					<FormField>
-						<Switch bind:checked={browseFolder} />
-						<span slot="label">Folder</span>
-					</FormField>
-					<IconButton on:click={browseTable}>
-						<Icon icon="flowbite:dots-horizontal-outline" width="24" height="24" />
-					</IconButton>
-				{/if}
-			</div>
+			{#if locationType == 'aws'}
+				<AwsParameters options={awsOptions} />
+			{:else if locationType == 'local'}
+				<LocalParameters bind:path={location[locationType].value} />
+			{/if}
+			<Textfield
+				bind:value={location[locationType].value}
+				label={location[locationType].label}
+				class="w-full"
+			/>
 		</div>
 	</Content>
 	<Actions>
