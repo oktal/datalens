@@ -161,7 +161,7 @@
 >
 	<Title id="list-selection-title">Create a new database</Title>
 	<Content id="list-selection-content">
-		<div class="flex flex-col m-5">
+		<div class="flex flex-col gap-2 m-5">
 			<Select bind:value={create.database} label="Database" use={[InitialFocus]}>
 				{#each databases as { name }}
 					<Option value={name}>{name}</Option>

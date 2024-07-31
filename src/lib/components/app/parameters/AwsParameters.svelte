@@ -5,6 +5,8 @@
 	import Tab, { Label } from '@smui/tab';
 	import Button from '@smui/button';
 
+	import { awsSSOLogin } from '$lib/lens/api';
+
 	export let options: AwsOptions;
 
 	let sso_start_url: string = '';
@@ -12,6 +14,18 @@
 	let sso_role: string = '';
 
 	let mode: string = 'Basic';
+
+	async function loginWithSSO() {
+		const [accessKeyId, secretKey] = await awsSSOLogin(
+			sso_start_url,
+			options.region,
+			sso_account_id,
+			sso_role
+		);
+
+		options.secret_key_id = accessKeyId;
+		options.secret_key_id = secretKey;
+	}
 </script>
 
 <div class="flex flex-col gap-2 w-full">
@@ -36,6 +50,6 @@
 	</div>
 
 	{#if mode == 'SSO'}
-		<Button variant="raised" class="mt-2 w-min">Login</Button>
+		<Button variant="raised" class="mt-2 w-min" on:click={loginWithSSO}>Login</Button>
 	{/if}
 </div>

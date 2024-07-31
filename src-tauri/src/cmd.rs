@@ -1,4 +1,5 @@
 use crate::{
+    aws,
     lens::{Lens, LensResult},
     model::{self, StreamId},
 };
@@ -67,4 +68,15 @@ pub async fn list_databases(lens: tauri::State<'_, Lens>) -> LensResult<Vec<mode
     }
 
     Ok(catalogs)
+}
+
+#[tauri::command]
+pub async fn aws_sso_login(
+    start_url: String,
+    region: String,
+    account_id: String,
+    role_name: String,
+) -> LensResult<(String, String)> {
+    let credentials = aws::sso_login(start_url, region, account_id, role_name).await?;
+    Ok(credentials)
 }

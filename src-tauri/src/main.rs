@@ -1,6 +1,7 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod aws;
 mod cmd;
 mod lens;
 mod model;
@@ -22,6 +23,7 @@ fn main() {
             cmd::sql,
             cmd::sql_stream,
             cmd::stream_next,
+            cmd::aws_sso_login,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

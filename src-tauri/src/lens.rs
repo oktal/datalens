@@ -10,7 +10,7 @@ use crate::{
     stream::{QueryStreamRequest, QueryStreamer},
 };
 
-pub struct LensError(pub(crate) Box<dyn std::error::Error + Send + Sync + 'static>);
+pub struct LensError(anyhow::Error);
 pub type LensResult<T, E = LensError> = std::result::Result<T, E>;
 
 pub struct Lens {
@@ -21,7 +21,7 @@ pub struct Lens {
 
 impl<E> From<E> for LensError
 where
-    E: std::error::Error + Send + Sync + 'static,
+    E: Into<anyhow::Error>,
 {
     fn from(value: E) -> Self {
         Self(value.into())
