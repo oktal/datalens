@@ -72,7 +72,12 @@
 		const table = await tableDialog.show();
 		const tableRef = `${table.database}.${table.schema}.${table.name}`;
 
-		const query = `CREATE EXTERNAL TABLE ${tableRef} STORED AS ${table.fileType} LOCATION '${table.location}'`;
+		let partitionedBy = '';
+		if (table.partitionColumns.length > 0) {
+			partitionedBy = `PARTITIONED BY (${table.partitionColumns.join(',')})`;
+		}
+
+		const query = `CREATE EXTERNAL TABLE ${tableRef} STORED AS ${table.fileType} ${partitionedBy} LOCATION '${table.location}'`;
 
 		try {
 			await sql(query);
